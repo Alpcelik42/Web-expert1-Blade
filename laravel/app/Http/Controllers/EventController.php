@@ -127,7 +127,8 @@ class EventController extends Controller
                 EventImage::create([
                     'event_id' => $event->id,
                     'image_path' => $path,
-                    'is_primary' => false
+                    'is_main' => false,
+                    'order'=> 0
                 ]);
             }
         }

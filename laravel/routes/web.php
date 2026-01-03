@@ -6,6 +6,7 @@ use App\Http\Controllers\TicketController;
 use App\Http\Controllers\EventCollaboratorController;
 use App\Http\Controllers\BookingController;
 use Illuminate\Support\Facades\Route;
+use App\Models\Booking;
 
 // Debug route
 Route::get('/debug-test', function() {
@@ -79,7 +80,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/events/{event}/collaborators', [EventCollaboratorController::class, 'index'])->name('events.collaborators.index');
     Route::post('/events/{event}/collaborators', [EventCollaboratorController::class, 'store'])->name('events.collaborators.store');
     Route::delete('/events/{event}/collaborators/{collaborator}', [EventCollaboratorController::class, 'destroy'])->name('events.collaborators.destroy');
+
 });
+Route::get('/bookings/{booking}/payment', function (Booking $booking) {
+    abort_if($booking->user_id !== auth()->id(), 403);
+    return view('bookings.payment-method', compact('booking'));
+})->middleware('auth')->name('bookings.payment-method');
+
+
+Route::post('/bookings/{booking}/payment', [BookingController::class, 'confirm'])
+    ->name('bookings.process-payment');
 
 // Public event show route (moet buiten auth middleware)
 Route::get('/events/{event}', [EventController::class, 'show'])->name('events.show');

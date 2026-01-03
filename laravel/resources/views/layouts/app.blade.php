@@ -47,12 +47,15 @@
 
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #f8fafc;
             color: var(--dark-color);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             line-height: 1.6;
+            background:
+                radial-gradient(circle at 30% 20%, rgba(0, 255, 255, 0.15), transparent 40%),
+                radial-gradient(circle at 70% 70%, rgba(255, 0, 255, 0.15), transparent 40%),
+                linear-gradient(180deg, #0f172a, #020617);
         }
 
         /* Header & Navigation */
@@ -481,11 +484,12 @@
    ========================= */
 
         /* Niets achter de modal mag reageren */
-        body.modal-open main,
-        body.modal-open nav,
-        body.modal-open footer {
-            pointer-events: none;
+        body.modal-open .card,
+        body.modal-open .hover-lift,
+        body.modal-open [class*="hover"] {
+            transform: none !important;
         }
+
 
         /* Alleen de modal zelf is interactief */
         body.modal-open .modal,
@@ -500,7 +504,6 @@
             transform: none !important;
             transition: none !important;
         }
-
 
     </style>
 
@@ -670,7 +673,7 @@
                         <ul>
                             <li><a href="{{ route('events.index') }}"><i class="bi bi-chevron-right"></i> Evenementen</a></li>
                             <li><a href="{{ route('events.calendar') }}"><i class="bi bi-chevron-right"></i> Kalender</a></li>
-                            <li><a href="#"><i class="bi bi-chevron-right"></i> Over EventHub</a></li>
+                            <li><a href="{{ route('events.index') }}"><i class="bi bi-chevron-right"></i> Over EventHub</a></li>
                             <li><a href="#"><i class="bi bi-chevron-right"></i> Contact</a></li>
                         </ul>
                     </div>

@@ -4,11 +4,145 @@
 @section('title', $event->title)
 
 @section('content')
-    <div class="row">
-        <div class="col-md-8">
+    <style>
+        /* =========================
+           Algemene mobile tweaks
+           ========================= */
+        @media (max-width: 767.98px) {
+            .row.py-5 {
+                padding-top: 2rem !important;
+                padding-bottom: 2rem !important;
+            }
+
+            h1 {
+                font-size: 1.6rem;
+                line-height: 1.2;
+            }
+
+            h5 {
+                font-size: 1.1rem;
+            }
+
+            p, li {
+                font-size: 0.95rem;
+            }
+
+            /* Buttons stacken */
+            .btn {
+                width: 100%;
+            }
+
+            .d-flex.flex-wrap.gap-2 > * {
+                flex: 1 1 100%;
+            }
+        }
+
+        /* =========================
+           Carousel responsive
+           ========================= */
+        @media (max-width: 767.98px) {
+            #eventCarousel img {
+                height: 220px !important;
+                object-fit: cover;
+            }
+
+            .carousel-indicators {
+                margin-bottom: 0;
+            }
+        }
+
+        @media (min-width: 768px) and (max-width: 991.98px) {
+            #eventCarousel img {
+                height: 300px !important;
+            }
+        }
+
+        /* =========================
+           Layout columns
+           ========================= */
+        @media (max-width: 991.98px) {
+            .col-md-8,
+            .col-md-4 {
+                margin-top: 1.5rem !important;
+            }
+        }
+
+        /* =========================
+           Tickets card
+           ========================= */
+        @media (max-width: 767.98px) {
+            .card-body .border.rounded {
+                padding: 1rem;
+            }
+
+            .card-body .d-flex.justify-content-between {
+                flex-direction: column;
+                align-items: flex-start !important;
+                gap: 0.75rem;
+            }
+
+            .card-body strong.h4 {
+                font-size: 1.3rem;
+            }
+        }
+
+        /* =========================
+           Modals (booking & invite)
+           ========================= */
+        @media (max-width: 575.98px) {
+            .modal-dialog {
+                margin: 0.75rem;
+            }
+
+            .modal-content {
+                border-radius: 0.75rem;
+            }
+
+            .modal-footer {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .modal-footer .btn {
+                width: 100%;
+            }
+        }
+
+        /* =========================
+           Share section
+           ========================= */
+        @media (max-width: 767.98px) {
+            .input-group {
+                flex-direction: column;
+            }
+
+            .input-group .form-control {
+                border-radius: 0.375rem !important;
+                margin-bottom: 0.5rem;
+                width: 100% !important;
+
+            }
+
+            .input-group .btn {
+                border-radius: 0.375rem !important;
+            }
+        }
+
+        /* =========================
+           Kleine UX verbeteringen
+           ========================= */
+        @media (hover: none) {
+            button, a {
+                touch-action: manipulation;
+            }
+        }
+    </style>
+
+    <div class="row py-5">
+        <div class="col-md-8 mt-5">
             <!-- Image Carousel -->
             @if($event->images->count() > 0)
-                <div id="eventCarousel" class="carousel slide mb-4" data-bs-ride="carousel">
+                <div id="eventCarousel" class="carousel slide mb-5" data-bs-ride="carousel" >
                     <div class="carousel-indicators">
                         @foreach($event->images as $key => $image)
                             <button type="button" data-bs-target="#eventCarousel"
@@ -35,34 +169,37 @@
                 </div>
             @endif
 
-            <h1>{{ $event->title }}</h1>
-
-            <div class="mb-4">
-                @auth
-                    <form action="{{ route('events.favorite', $event) }}" method="POST" class="d-inline">
-                        @csrf
-                        <button type="submit" class="btn btn-outline-warning">
-                            <i class="bi bi-star{{ $isFavorite ? '-fill' : '' }}"></i>
-                            {{ $isFavorite ? 'Verwijder uit favorieten' : 'Voeg toe aan favorieten' }}
-                        </button>
-                    </form>
-
-                    @if(Auth::check() && Auth::id() === $event->user_id)
-                        <a href="{{ route('events.edit', $event) }}" class="btn btn-outline-primary">
-                            <i class="bi bi-pencil"></i> Bewerk
-                        </a>
-                        <form action="{{ route('events.destroy', $event) }}" method="POST" class="d-inline">
+            <!-- Event Title + Buttons -->
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                <h1 class="mb-0">{{ $event->title }}</h1>
+                <div class="d-flex flex-wrap gap-2">
+                    @auth
+                        <form action="{{ route('events.favorite', $event) }}" method="POST" class="d-inline">
                             @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-outline-danger"
-                                    onclick="return confirm('Weet je zeker dat je dit evenement wilt verwijderen?')">
-                                <i class="bi bi-trash"></i> Verwijder
+                            <button type="submit" class="btn btn-outline-warning" style="border: 2px solid goldenrod">
+                                <i class="bi bi-star{{ $isFavorite ? '-fill' : '' }}"></i>
+                                {{ $isFavorite ? 'Verwijder uit favorieten' : 'Voeg toe aan favorieten' }}
                             </button>
                         </form>
-                    @endif
-                @endauth
+
+                        @if(Auth::check() && Auth::id() === $event->user_id)
+                            <a href="{{ route('events.edit', $event) }}" class="btn btn-outline-primary">
+                                <i class="bi bi-pencil"></i> Bewerk
+                            </a>
+                            <form action="{{ route('events.destroy', $event) }}" method="POST" class="d-inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-outline-danger"
+                                        onclick="return confirm('Weet je zeker dat je dit evenement wilt verwijderen?')" style="border: 2px solid red">
+                                    <i class="bi bi-trash"></i> Verwijder
+                                </button>
+                            </form>
+                        @endif
+                    @endauth
+                </div>
             </div>
 
+            <!-- Event Description & Details -->
             <div class="row mb-4">
                 <div class="col-md-6">
                     <h5><i class="bi bi-info-circle"></i> Beschrijving</h5>
@@ -83,7 +220,7 @@
             </div>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-4 mt-5">
             <!-- Tickets Section -->
             <div class="card mb-4">
                 <div class="card-header bg-primary text-white">
@@ -187,7 +324,7 @@
                 </div>
             </div>
 
-            <!-- Share Event (Extra Feature) -->
+            <!-- Share Event -->
             @auth
                 <div class="card">
                     <div class="card-header bg-info text-white">
